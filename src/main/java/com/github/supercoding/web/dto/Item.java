@@ -1,6 +1,6 @@
 package com.github.supercoding.web.dto;
 
-import com.github.supercoding.respository.ItemEntity;
+import com.github.supercoding.respository.Items.ItemEntity;
 
 import java.util.Objects;
 
@@ -14,7 +14,8 @@ public class Item {
     public Item() {
     }
 
-    public Item(Integer id,ItemBody itemBody){
+
+    public Item(Integer id, ItemBody itemBody){
         this.id = String.valueOf(id);
         this.name = itemBody.getName();
         this.type = itemBody.getType();
