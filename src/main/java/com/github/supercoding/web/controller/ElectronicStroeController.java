@@ -4,6 +4,10 @@ import com.github.supercoding.service.ElectronicStoreItemService;
 import com.github.supercoding.web.dto.BuyOrder;
 import com.github.supercoding.web.dto.Item;
 import com.github.supercoding.web.dto.ItemBody;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -12,21 +16,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
+@Slf4j
 public class ElectronicStroeController {
 
-
-
-    private ElectronicStoreItemService electronicStoreItemService;
-
-    public ElectronicStroeController(ElectronicStoreItemService electronicStoreItemService) {
-        this.electronicStoreItemService = electronicStoreItemService;
-    }
+    private final ElectronicStoreItemService electronicStoreItemService;
 
     @GetMapping("/items")
     public List<Item> findAllItem(){
-
-
-        return electronicStoreItemService.findAllItem();
+        log.info("GET /items 요청이 들어왔습니다.");
+        List<Item> items = electronicStoreItemService.findAllItem();
+        log.info("GET /items 응답: "+items);
+        return items;
     }
 
     @PostMapping("/items")
@@ -48,8 +49,10 @@ public class ElectronicStroeController {
 
     @GetMapping("/items-queries")
     public List<Item> findItemByQueryIds(@RequestParam("id") List<String> ids){
-        return electronicStoreItemService.findItemByIds(ids);
-
+        log.info("/items-queries 요청 ids: "+ids);
+        List<Item> items= electronicStoreItemService.findItemByIds(ids);
+        log.info("/items-queries 응답: "+items);
+        return items;
     }
 
     @DeleteMapping("/items/{id}")

@@ -4,9 +4,13 @@ import com.github.supercoding.respository.Items.ElectronicStoreItemRepository;
 import com.github.supercoding.respository.Items.ItemEntity;
 import com.github.supercoding.respository.storeSales.StoreSales;
 import com.github.supercoding.respository.storeSales.StoreSalesRepository;
+import com.github.supercoding.service.mapper.ItemMapper;
 import com.github.supercoding.web.dto.BuyOrder;
 import com.github.supercoding.web.dto.Item;
 import com.github.supercoding.web.dto.ItemBody;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,19 +18,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ElectronicStoreItemService {
 
-    private ElectronicStoreItemRepository electronicStoreItemRepository;
-    private StoreSalesRepository storeSalesRepository;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public ElectronicStoreItemService(ElectronicStoreItemRepository electronicStoreItemRepository, StoreSalesRepository storeSalesRepository) {
-        this.electronicStoreItemRepository = electronicStoreItemRepository;
-        this.storeSalesRepository = storeSalesRepository;
-    }
+    private final ElectronicStoreItemRepository electronicStoreItemRepository;
+    private final StoreSalesRepository storeSalesRepository;
+
+
 
     public List<Item> findAllItem() {
         List<ItemEntity> itemEntities = electronicStoreItemRepository.findAllItems();
-        return itemEntities.stream().map(Item::new).collect(Collectors.toList());
+        return itemEntities.stream().map(ItemMapper.INSTANCE::itemEntityToItem).collect(Collectors.toList());
     }
 
     public Integer saveItem(ItemBody itemBody) {
@@ -38,7 +42,7 @@ public class ElectronicStoreItemService {
     public Item findItemById(String id){
         Integer idInt = Integer.parseInt(id);
         ItemEntity itemEntity = electronicStoreItemRepository.findItemById(idInt);
-        Item item = new Item(itemEntity);
+        Item item = ItemMapper.INSTANCE.itemEntityToItem(itemEntity);
         return item;
 
     }
@@ -47,7 +51,7 @@ public class ElectronicStoreItemService {
     public List<Item> findItemByIds(List<String> ids) {
         List<ItemEntity> itemEntities = electronicStoreItemRepository.findAllItems();
        return itemEntities.stream()
-                .map(Item::new)
+                .map(ItemMapper.INSTANCE::itemEntityToItem)
                 .filter((item -> ids.contains(item.getId())))
                 .collect(Collectors.toList());
     }
@@ -62,10 +66,10 @@ public class ElectronicStoreItemService {
         ItemEntity itemEntity = new ItemEntity(idInt,itemBody.getName(),itemBody.getType()
                 ,itemBody.getPrice(),itemBody.getSpec().getCpu(),itemBody.getSpec().getCapacity());
         ItemEntity itemEntityUpdated = electronicStoreItemRepository.updateItemEntity(idInt,itemEntity);
-       return new Item(itemEntityUpdated);
+       return ItemMapper.INSTANCE.itemEntityToItem(itemEntityUpdated);
     }
 
-    @Transactional
+    @Transactional (transactionManager = "tm1")
     public Integer buyItems(BuyOrder buyOrder) {
         // 1. BuyOrder 에서 상품 ID와 수량을 얻어낸다.
         // 2. 상품을 조회하여 수량이 얼마나 있는 지 확인한다.
@@ -90,6 +94,11 @@ public class ElectronicStoreItemService {
 
         //Item 재고 감소
         electronicStoreItemRepository.updateItemStock(itemId,itemEntity.getStock()-successBuyItemNums);
+
+        if(successBuyItemNums ==4) {
+            logger.error("4개를 구매하는건 허락하지않습니다.");
+            throw new RuntimeException("4개를 구매하는건 허락하지않습니다.");
+        }
 
         // 매장 매상 추가
         StoreSales storeSales = storeSalesRepository.findStoreSalesById(itemEntity.getStoreId());

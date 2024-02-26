@@ -1,6 +1,7 @@
 package com.github.supercoding.respository.storeSales;
 
 import com.github.supercoding.respository.Items.ItemEntity;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -8,19 +9,17 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class StoreSalesJdbcTemplateDao implements StoreSalesRepository{
 
-    private JdbcTemplate jdbcTemplate;
+    private  final JdbcTemplate jdbcTemplate;
 
-    public StoreSalesJdbcTemplateDao(JdbcTemplate jdbcTemplate) {
+    public StoreSalesJdbcTemplateDao(@Qualifier("jdbcTemplate1") JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     static RowMapper<StoreSales> storeSalesRowMapper = (((rs, rowNum) ->
-            new StoreSales(
-                    rs.getInt("id"),
-                    rs.getNString("store_name"),
-                    rs.getInt("amount")
-            )
-    ));
+            new StoreSales.StoreSalesBuilder()
+                    .id(rs.getInt("id"))
+                    .storeName(rs.getNString("store_name"))
+                    .amount(rs.getInt("amount")).build()));
 
     @Override
     public StoreSales findStoreSalesById(Integer storeId) {
