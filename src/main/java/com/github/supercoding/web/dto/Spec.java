@@ -1,5 +1,6 @@
 package com.github.supercoding.web.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 @Getter
@@ -8,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class Spec {
-    private String cpu;
-    private String capacity;
+    @ApiModelProperty(name="cpu",value = "Item cpu", example = "Google Tensor") private String cpu;
+    @ApiModelProperty(name="capacity",value = "Item 용량 Spec", example = "25G")  private String capacity;
 
 }
