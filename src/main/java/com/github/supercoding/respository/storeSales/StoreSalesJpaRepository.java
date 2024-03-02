@@ -2,6 +2,7 @@ package com.github.supercoding.respository.storeSales;
 
 import com.github.supercoding.respository.Items.ItemEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
@@ -9,5 +10,7 @@ import java.util.List;
 @Repository
 public interface StoreSalesJpaRepository extends JpaRepository<StoreSales, Integer> {
 
+    @Query("SELECT s FROM StoreSales s JOIN FETCH s.itemEntities")
+    List<StoreSales> findAllFetchJoin();
 
 }

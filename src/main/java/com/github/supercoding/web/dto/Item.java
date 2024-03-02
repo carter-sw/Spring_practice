@@ -4,11 +4,13 @@ import com.github.supercoding.respository.Items.ItemEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Objects;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @ToString
 public class Item {
@@ -16,11 +18,12 @@ public class Item {
     @ApiModelProperty(name="name",value = "Item 이름", example = "Dell XPS 15") private String name;
     @ApiModelProperty(name="type",value = "Item 기기타입", example = "Laptop") private String type;
     @ApiModelProperty(name="price",value = "Item 가격", example = "125000") private Integer price;
-     private Spec spec;
+    private Spec spec;
 
+    // 기존 코드 생략
 
-    public void setSpec(Spec spec) {
-        this.spec = spec;
+    public void setPrice(Integer price) {
+        this.price = price;
     }
-
 }
+

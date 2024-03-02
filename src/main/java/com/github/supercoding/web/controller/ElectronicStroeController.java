@@ -4,6 +4,7 @@ import com.github.supercoding.service.ElectronicStoreItemService;
 import com.github.supercoding.web.dto.BuyOrder;
 import com.github.supercoding.web.dto.Item;
 import com.github.supercoding.web.dto.ItemBody;
+import com.github.supercoding.web.dto.StoreInfo;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
@@ -84,9 +85,8 @@ public class ElectronicStroeController {
         return electronicStoreItemService.updateItem(id, itemBody);
     }
 
-    @ApiOperation("모든 Item 구매")
     @PostMapping("/items/buy")
-    public String buyItem(@RequestBody BuyOrder buyOrder) {
+    public String buyItem(@RequestBody BuyOrder buyOrder){
         Integer orderItemNums = electronicStoreItemService.buyItems(buyOrder);
         return "요청하신 Item 중 " + orderItemNums + "개를 구매 하였습니다.";
 
@@ -121,5 +121,11 @@ public class ElectronicStroeController {
     @GetMapping("/items-types-page")
     public Page<Item> findItemsPagination(@RequestParam("type")List<String> types, Pageable pageable){
         return electronicStoreItemService.findAllWithPageable(types,pageable);
+    }
+
+    @ApiOperation("전체 stores 정보 검색")
+    @GetMapping("/stores")
+    public List<StoreInfo> findAllStoreInfo(){
+        return electronicStoreItemService.findAllStoreInfo();
     }
 }

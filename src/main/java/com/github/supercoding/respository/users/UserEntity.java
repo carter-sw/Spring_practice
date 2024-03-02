@@ -1,66 +1,33 @@
 package com.github.supercoding.respository.users;
 
+import com.github.supercoding.respository.passenger.Passenger;
+import jakarta.persistence.*;
+import lombok.*;
+
 import java.util.Objects;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of="userId")
+@Getter
+@Setter
+@Entity
+@Builder
+@Table(name = "users")
 public class UserEntity {
 
+    @Id
+    @Column(name = "user_id") @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
+    @Column(name = "user_name",length = 20)
     private String userName;
+    @Column(name = "like_travel_place",length = 30)
     private String likeTravelPlace;
+    @Column(name = "phone_num", length = 30)
     private String phoneNum;
 
-    public UserEntity() {
-    }
+    @OneToOne(mappedBy = "userId")
+    private Passenger passenger;
 
-    public UserEntity(Integer userId, String userName, String likeTravelPlace, String phoneNum) {
-        this.userId = userId;
-        this.userName = userName;
-        this.likeTravelPlace = likeTravelPlace;
-        this.phoneNum = phoneNum;
-    }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserEntity that = (UserEntity) o;
-        return Objects.equals(userId, that.userId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId);
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getLikeTravelPlace() {
-        return likeTravelPlace;
-    }
-
-    public void setLikeTravelPlace(String likeTravelPlace) {
-        this.likeTravelPlace = likeTravelPlace;
-    }
-
-    public String getPhoneNum() {
-        return phoneNum;
-    }
-
-    public void setPhoneNum(String phoneNum) {
-        this.phoneNum = phoneNum;
-    }
 }

@@ -1,41 +1,29 @@
 package com.github.supercoding.respository.passenger;
 
+import com.github.supercoding.respository.users.UserEntity;
+import jakarta.persistence.*;
+import lombok.*;
+
 import java.util.Objects;
 
+@EqualsAndHashCode(of="passengerId")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Entity
+@Table(name = "passenger")
 public class Passenger {
 
+    @Id @Column(name = "passenger_id") @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer passengerId;
-    private Integer userId;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false,unique = true)
+    private UserEntity userId;
+
+    @Column(name = "passport_num",length = 50)
     private String passportNum;
 
-    public Passenger(Integer passengerId, Integer userId, String passportNum) {
-        this.passengerId = passengerId;
-        this.userId = userId;
-        this.passportNum = passportNum;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Passenger passenger = (Passenger) o;
-        return Objects.equals(passengerId, passenger.passengerId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(passengerId);
-    }
-
-    public Integer getPassengerId() {
-        return passengerId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public String getPassportNum() {
-        return passportNum;
-    }
 }
