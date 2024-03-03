@@ -10,4 +10,6 @@ public interface AirlineTicketJpaRepository extends JpaRepository<AirlineTicket,
     List<AirlineTicket> findAllAirlineTicketsWithPlaceAndTicketType(String likePlace, String ticketType);
 
     List<AirlineTicketAndFlightInfo> findAllAirlineTicketAndFlightInfo(Integer airlineTicketId);
+
+    List<AirlineTicket> findAirlineTicketsByArrivalLocationAndTicketType(String likePlace, String ticketType);
 }

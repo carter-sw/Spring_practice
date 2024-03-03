@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -30,9 +31,7 @@ public class ElectronicStroeController {
     @ApiOperation(value = "모든 Items을 검색")
     @GetMapping("/items")
     public List<Item> findAllItem() {
-        log.info("GET /items 요청이 들어왔습니다.");
         List<Item> items = electronicStoreItemService.findAllItem();
-        log.info("GET /items 응답: " + items);
         return items;
     }
 
@@ -65,9 +64,7 @@ public class ElectronicStroeController {
     public List<Item> findItemByQueryIds(
             @ApiParam(name = "ids", value = "item IDs", example = "{1,2,3}")
             @RequestParam("id") List<String> ids) {
-        log.info("/items-queries 요청 ids: " + ids);
         List<Item> items = electronicStoreItemService.findItemByIds(ids);
-        log.info("/items-queries 응답: " + items);
         return items;
     }
 
@@ -97,9 +94,7 @@ public class ElectronicStroeController {
     public List<Item> findItemByTypes(
             @ApiParam(name = "ids", value = "item IDs", example = "{1,2,3}")
             @RequestParam("type") List<String> types) {
-        log.info("/items-types 요청 ids: " + types);
         List<Item> items = electronicStoreItemService.findItemByTypes(types);
-        log.info("/items-queries 응답: " + items);
         return items;
     }
 

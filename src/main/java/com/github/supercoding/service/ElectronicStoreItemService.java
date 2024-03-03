@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,7 +35,7 @@ public class ElectronicStoreItemService {
     private final StoreSalesJpaRepository storeSalesJpaRepository;
 
 
-
+    @Cacheable(value = "items",key="#root.methodName")
     public List<Item> findAllItem() {
         List<ItemEntity> itemEntities = electronicStoreItemJpaRepository.findAll();
 
@@ -42,6 +44,7 @@ public class ElectronicStoreItemService {
         return itemEntities.stream().map(ItemMapper.INSTANCE::itemEntityToItem).collect(Collectors.toList());
     }
 
+    @CacheEvict(value = "items",allEntries = true)
     public Integer saveItem(ItemBody itemBody) {
         ItemEntity itemEntity = new ItemEntity(null,itemBody.getName(),itemBody.getType()
                 ,itemBody.getPrice(),itemBody.getSpec().getCpu(),itemBody.getSpec().getCapacity());
@@ -57,6 +60,8 @@ public class ElectronicStoreItemService {
         return itemEntityCreated.getId();
     }
 
+
+    @Cacheable(value = "items",key="#id")
     public Item findItemById(String id){
         Integer idInt = Integer.parseInt(id);
         ItemEntity itemEntity = electronicStoreItemJpaRepository.findById(idInt).orElseThrow(()-> new NotFoundException("해당 ID:"+idInt+"의 item을 찾을수없습니다."));
@@ -65,7 +70,7 @@ public class ElectronicStoreItemService {
 
     }
 
-
+    @Cacheable(value = "items",key="#ids")
     public List<Item> findItemByIds(List<String> ids) {
         List<ItemEntity> itemEntities = electronicStoreItemJpaRepository.findAll();
        return itemEntities.stream()
@@ -73,13 +78,14 @@ public class ElectronicStoreItemService {
                 .filter((item -> ids.contains(item.getId())))
                 .collect(Collectors.toList());
     }
-
+    @CacheEvict(value = "items",allEntries = true)
     public void deleteItem(String id) {
         Integer idInt = Integer.parseInt(id);
        electronicStoreItemJpaRepository.deleteById(idInt);
     }
 
     @Transactional(transactionManager = "tmJpa1")
+    @CacheEvict(value = "items",allEntries = true)
     public Item updateItem(String id, ItemBody itemBody) {
         Integer idInt = Integer.valueOf(id);
 

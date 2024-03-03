@@ -4,3 +4,12 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
+datasource:
+  username: ${DATABASE_USERNAME}
+  password: ${DATABASE_PASSWORD}
+  diver-class-name: com.mysql.cj.jdbc.Driver
+  url: jdbc:mysql://localhost:3306/chapter_96
+
+jwt:
+  secret-key-source: ${JWT_SECRET_KEY}

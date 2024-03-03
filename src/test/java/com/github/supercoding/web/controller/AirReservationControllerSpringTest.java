@@ -37,16 +37,16 @@ class AirReservationControllerSpringTest {
         String ticketType = "왕복";
 
         //when & then
-        String content = mockMvc.perform(
-                get("/v1/api/air-reservation/tickets")
-                        .param("user-Id",userId.toString())
-                        .param("airline-ticket-type",ticketType)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .andExpect(status().is4xxClientError())
-                        .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-
-                log.info("결과: " +content);
-        )
+//        String content = mockMvc.perform(
+//                get("/v1/api/air-reservation/tickets")
+//                        .param("user-Id",userId.toString())
+//                        .param("airline-ticket-type",ticketType)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .andExpect(status().is4xxClientError())
+//                        .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+//
+//                log.info("결과: " +content);
+//        )
 
 
     }

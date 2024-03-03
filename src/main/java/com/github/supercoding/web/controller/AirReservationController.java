@@ -1,5 +1,6 @@
 package com.github.supercoding.web.controller;
 
+import com.github.supercoding.respository.userDetails.CustomUserDetails;
 import com.github.supercoding.service.AirReservationService;
 import com.github.supercoding.service.exceptions.InvalidValueException;
 import com.github.supercoding.service.exceptions.NotAcceptException;
@@ -13,6 +14,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,8 +31,11 @@ public class AirReservationController {
     }
 
     @GetMapping("/tickets")
-    public TicketResponse findAirlineTickets(@RequestParam("user-Id")Integer userId,
-                                             @RequestParam("airline-ticket-type")String ticketType){
+    public TicketResponse findAirlineTickets(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+//            @RequestParam("user-Id")Integer userId,
+            @RequestParam("airline-ticket-type")String ticketType){
+            Integer userId = customUserDetails.getUserId();
             List<Ticket> tickets = airReservationService.findUserFavoritePlaceTickets(userId,ticketType);
             return new TicketResponse(tickets);
     }
